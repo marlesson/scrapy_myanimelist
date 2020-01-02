@@ -6,6 +6,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import json
+import os
 from myanimelist.items import AnimeItem, ReviewItem, ProfileItem
 
 
@@ -50,6 +51,8 @@ class ProcessPipeline(object):
 class SaveLocalPipeline(object):
 
     def open_spider(self, spider):
+      os.makedirs('data/', exist_ok=True)
+
       self.files = {}
       self.files['AnimeItem']   = open('data/animes.txt', 'w')
       self.files['ReviewItem']  = open('data/reviews.txt', 'w')

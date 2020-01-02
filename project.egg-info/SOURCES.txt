@@ -1,5 +1,6 @@
 .gitignore
 README.txt
+requirements.txt
 scrapinghub.yml
 scrapy.cfg
 setup.py
