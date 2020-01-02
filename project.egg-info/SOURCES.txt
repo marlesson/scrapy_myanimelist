@@ -1,5 +1,6 @@
 .gitignore
 README.txt
+scrapinghub.yml
 scrapy.cfg
 setup.py
 myanimelist/__init__.py
