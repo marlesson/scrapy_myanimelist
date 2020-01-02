@@ -19,7 +19,7 @@ class AnimeItem(scrapy.Item):
     members = scrapy.Field()
     aired   = scrapy.Field()
     genre   = scrapy.Field()
-
+    episodes = scrapy.Field()
 
 class ReviewItem(scrapy.Item):
     uid         = scrapy.Field() 

@@ -23,7 +23,35 @@ class MyAnimeListPipeline(object):
     def process_item(self, item, spider):
       item_class = item.__class__.__name__
 
+      if item_class == "AnimeItem":
+        item = self.process_anime(item)
+      elif item_class == "ReviewItem":
+        item = self.process_review(item)
+      elif item_class == "ProfileItem":
+        item = self.process_profile(item)
+
+      # Save
+      self.save(item_class, item)
+
+      return item
+
+    def save(self, item_class, item):
       line =  json.dumps(dict(item)) + '\n'
       self.files[item_class].write(line)
 
+    def process_anime(self, item):
+      item['score']      = float(item['score'].replace("\n", "").strip())
+      item['ranked']     = int(item['ranked'].replace("#", "").strip())
+      item['popularity'] = int(item['popularity'].replace("#", "").strip())
+      item['members']    = int(item['members'].replace(",", "").strip())
+
+      return item
+
+    def process_review(self, item):
+      item['score']      = float(item['score'].replace("\n", "").strip())
+
+      return item
+
+    def process_profile(self, item):
+      
       return item
