@@ -74,10 +74,7 @@ class SaveLocalPipeline(object):
       line =  json.dumps(dict(item)) + '\n'
       self.files[item_class].write(line)
 
-#M96GXqvQOptYP267
 
-#client = pymongo.MongoClient("mongodb+srv://admin:M96GXqvQOptYP267@cluster0-qmyeo.mongodb.net/test?retryWrites=true&w=majority")
-#db = client.test
 class SaveMongoPipeline(object):
 
     def open_spider(self, spider):

@@ -4,6 +4,7 @@ requirements.txt
 scrapinghub.yml
 scrapy.cfg
 setup.py
+data/.gitignore
 myanimelist/__init__.py
 myanimelist/items.py
 myanimelist/middlewares.py
