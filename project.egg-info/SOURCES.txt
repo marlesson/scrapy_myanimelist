@@ -1,0 +1,16 @@
+.gitignore
+README.txt
+scrapy.cfg
+setup.py
+myanimelist/__init__.py
+myanimelist/items.py
+myanimelist/middlewares.py
+myanimelist/pipelines.py
+myanimelist/settings.py
+myanimelist/spiders/MyAnimeList.py
+myanimelist/spiders/__init__.py
+project.egg-info/PKG-INFO
+project.egg-info/SOURCES.txt
+project.egg-info/dependency_links.txt
+project.egg-info/entry_points.txt
+project.egg-info/top_level.txt
