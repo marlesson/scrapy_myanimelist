@@ -63,13 +63,14 @@ class MyAnimeListSpider(scrapy.Spider):
     def parse_list_review(self, response):
       p = response.url.split("p=")[1]
 
-      for review in response.css("div.borderDark"):
+      reviews = response.css("div.borderDark")
+      for review in reviews:
         link = review.css("div.clearfix a::attr(href)").extract_first()
         yield response.follow(link, self.parse_review)
 
       # None, First Page and not last page
       next_page = response.css("div.mt4 a::attr(href)").extract()
-      if next_page is not None and len(next_page) > 0 and (p == '1' or len(next_page) > 1):
+      if next_page is not None and len(reviews) > 0 and len(next_page) > 0 and (p == '1' or len(next_page) > 1):
         next_page = next_page[0] if p == '1' else next_page[1]
         yield response.follow(next_page, self.parse_list_review)
     
