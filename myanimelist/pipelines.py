@@ -9,7 +9,7 @@ import json
 import os
 import numpy as np
 from myanimelist.items import AnimeItem, ReviewItem, ProfileItem
-
+from pymongo import MongoClient
 
 class ProcessPipeline(object):
 
@@ -85,14 +85,33 @@ class SaveLocalPipeline(object):
 
 
 class SaveMongoPipeline(object):
+    def __init__(self, mongodb_url = ""):
+        self.mongodb_url = mongodb_url
 
     def open_spider(self, spider):
-      pass
+      self.client  = MongoClient(self.mongodb_url)
+      self.db      = self.client['myanimelist']
+      
+      self.collection = {}
+      self.collection['AnimeItem']   = self.db.animes
+      self.collection['ReviewItem']  = self.db.reviews
+      self.collection['ProfileItem'] = self.db.profiles
 
     def close_spider(self, spider):
-      pass
+      self.client.close()
 
     def process_item(self, item, spider):
       item_class = item.__class__.__name__
 
+      # Save
+      self.save(item_class, item)
+
       return item
+
+    def save(self, item_class, item):
+      self.collection[item_class].insert_one(dict(item))
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        settings = crawler.settings
+        return cls(settings.get('MONGODB_URL'))      
