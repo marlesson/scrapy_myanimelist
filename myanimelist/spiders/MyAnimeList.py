@@ -83,7 +83,7 @@ class MyAnimeListSpider(scrapy.Spider):
 
       url_profile       = response.css("td a[href*=profile] ::attr(href)").extract_first()
       attr['profile']   = url_profile.split("/")[-1]
-      #attr['text']      = " ".join(response.css("div.textReadability ::text").extract()) 
+      attr['text']      = " ".join(response.css("div.textReadability ::text").extract()) 
 
       scores            =  np.array(response.css("div.textReadability td ::text").extract())
       scores = dict(zip(scores[[i for i in range(12) if (i%2) == 0]], 
