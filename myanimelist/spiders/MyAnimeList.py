@@ -3,21 +3,32 @@ import scrapy
 import numpy as np
 from myanimelist.items import AnimeItem, ReviewItem, ProfileItem
 
+
+#
+# --start_limit
+# --end_limit
 class MyAnimeListSpider(scrapy.Spider):
     name = 'MyAnimeList'
     allowed_domains = ['myanimelist.net']
-    start_urls = ['https://myanimelist.net/topanime.php']
+    #start_urls = ['https://myanimelist.net/topanime.php?limit=%s' % start_limit] 
+
+    def start_requests(self):
+        yield scrapy.Request('https://myanimelist.net/topanime.php?limit=%s' % self.start_limit) #16300
 
     # https://myanimelist.net/topanime.php
     def parse(self, response):
       self.logger.info('Parse function called on %s', response.url)
+
+      limit = response.url.split("limit=")[1]
+      if int(limit) > int(self.end_limit):
+        return
 
       for rank in response.css(".ranking-list"):
         link    = rank.css("td.title a::attr(href)").extract_first()
 
         yield response.follow(link, self.parse_anime)
 
-      next_page = response.css("div.pagination a::attr(href)").extract_first()
+      next_page = response.css("div.pagination a.next ::attr(href)").extract_first()
       if next_page is not None:
           yield response.follow("{}{}".format(response.url.split("?")[0], next_page), self.parse)
 

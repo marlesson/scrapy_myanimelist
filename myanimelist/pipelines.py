@@ -7,6 +7,7 @@
 
 import json
 import os
+import numpy as np
 from myanimelist.items import AnimeItem, ReviewItem, ProfileItem
 
 
@@ -31,11 +32,19 @@ class ProcessPipeline(object):
       return item
 
     def process_anime(self, item):
-      item['score']      = float(item['score'].replace("\n", "").strip())
-      item['ranked']     = int(item['ranked'].replace("#", "").strip())
+      if 'N/A' in item['score']:
+        item['score'] = np.nan
+      else:
+        item['score'] = float(item['score'].replace("\n", "").strip())
+      
+      if item['ranked'] == 'N/A':
+        item['ranked'] = np.nan
+      else:
+        item['ranked']     = int(item['ranked'].replace("#", "").strip())
+      
       item['popularity'] = int(item['popularity'].replace("#", "").strip())
       item['members']    = int(item['members'].replace(",", "").strip())
-      item['episodes']   = int(item['episodes'].replace(",", "").strip())
+      item['episodes']   = item['episodes'].replace(",", "").strip()
 
       return item
 
@@ -54,9 +63,9 @@ class SaveLocalPipeline(object):
       os.makedirs('data/', exist_ok=True)
 
       self.files = {}
-      self.files['AnimeItem']   = open('data/animes.txt', 'w')
-      self.files['ReviewItem']  = open('data/reviews.txt', 'w')
-      self.files['ProfileItem'] = open('data/profiles.txt', 'w')
+      self.files['AnimeItem']   = open('data/animes.jl', 'w+')
+      self.files['ReviewItem']  = open('data/reviews.jl', 'w+')
+      self.files['ProfileItem'] = open('data/profiles.jl', 'w+')
 
     def close_spider(self, spider):
       for k, v in self.files.items():
