@@ -3,14 +3,16 @@ import scrapy
 import numpy as np
 from myanimelist.items import AnimeItem, ReviewItem, ProfileItem
 
-
+# https://myanimelist.net/topanime.php?limit=<limit>
+# 
+# scrapy runspider myanimelist/spiders/MyAnimeList.py 
+# -a start_limit=<start_limit> 
+# -a end_limit=<end_limit> 
+# -s MONGODB_URL=<mongo_uri>
 #
-# --start_limit
-# --end_limit
 class MyAnimeListSpider(scrapy.Spider):
     name = 'MyAnimeList'
     allowed_domains = ['myanimelist.net']
-    #start_urls = ['https://myanimelist.net/topanime.php?limit=%s' % start_limit] 
 
     def start_requests(self):
         yield scrapy.Request('https://myanimelist.net/topanime.php?limit=%s' % self.start_limit) #16300

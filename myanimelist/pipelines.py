@@ -89,13 +89,14 @@ class SaveMongoPipeline(object):
         self.mongodb_url = mongodb_url
 
     def open_spider(self, spider):
-      self.client  = MongoClient(self.mongodb_url)
-      self.db      = self.client['myanimelist']
-      
-      self.collection = {}
-      self.collection['AnimeItem']   = self.db.animes
-      self.collection['ReviewItem']  = self.db.reviews
-      self.collection['ProfileItem'] = self.db.profiles
+      if self.is_configured:
+        self.client  = MongoClient(self.mongodb_url)
+        self.db      = self.client['myanimelist']
+        
+        self.collection = {}
+        self.collection['AnimeItem']   = self.db.animes
+        self.collection['ReviewItem']  = self.db.reviews
+        self.collection['ProfileItem'] = self.db.profiles
 
     def close_spider(self, spider):
       self.client.close()
@@ -104,12 +105,17 @@ class SaveMongoPipeline(object):
       item_class = item.__class__.__name__
 
       # Save
-      self.save(item_class, item)
+      if self.is_configured:
+        self.save(item_class, item)
 
       return item
 
     def save(self, item_class, item):
       self.collection[item_class].insert_one(dict(item))
+
+    @property
+    def is_configured(self):
+      return (self.mongodb_url is not None)
 
     @classmethod
     def from_crawler(cls, crawler):
