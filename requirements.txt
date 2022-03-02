@@ -1,2 +1,2 @@
 numpy==1.16.4
-scrapy==1.8.0
+scrapy==1.8.2
